@@ -10,14 +10,14 @@ type TodoListPropsType = {
     title: string,
     tasks: Array<TasksType>
     removeTask: (id: string, todoListId: string) => void
-    changeFilter: (value: FilterValuesType, todoListId: string) => void
+    changeFilter: (todoListId: string, value: FilterValuesType) => void
     addTask: (title: string, todoListId: string) => void
     changeStatus: (id: string, isDone: boolean, todoListId: string) => void
     filter: FilterValuesType
     id: string
     removeTodoList: (todoListId: string) => void
     changeTaskTitle: (id: string, newTitle: string, todoListId: string) => void
-    changeTodoListTitle: (newTitle: string, todoListId: string) => void
+    changeTodoListTitle: (todoListId: string, newTitle: string) => void
 
 }
 export type TasksType = {
@@ -28,16 +28,16 @@ export type TasksType = {
 
 export function TodoList(props: TodoListPropsType) {
 
-    const onAllClickHandler = () => props.changeFilter('All', props.id)
-    const onActiveClickHandler = () => props.changeFilter('Active', props.id)
-    const onCompletedClickHandler = () => props.changeFilter('Completed', props.id)
+    const onAllClickHandler = () => props.changeFilter(props.id, 'All')
+    const onActiveClickHandler = () => props.changeFilter(props.id, 'Active')
+    const onCompletedClickHandler = () => props.changeFilter(props.id, 'Completed')
     const removeTodoList = () => props.removeTodoList(props.id)
 // функция по добавлению id  в функцию из самой компоненты AddItemForm
     const addTask = (title: string) => {
         props.addTask(title, props.id)
     }
     const changeTodoListTitle = (newTitle: string) => {
-        props.changeTodoListTitle(newTitle, props.id)
+        props.changeTodoListTitle(props.id, newTitle)
     }
     return (
         <div>
