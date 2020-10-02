@@ -1,6 +1,6 @@
 import React, {useReducer, useState} from 'react';
 import './App.css';
-import {TasksType, TodoList} from "./TodoList";
+import {taskType, TodoList} from "./TodoList";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, IconButton, Typography, Toolbar, Container, Grid, Paper} from "@material-ui/core";
@@ -22,7 +22,7 @@ export type ToDoListType = {
     filter: FilterValuesType
 }
 export type TasksStateType = {
-    [key: string]: Array<TasksType>
+    [key: string]: Array<taskType>
 }
 
 function AppWithReducers() {

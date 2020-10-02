@@ -1,6 +1,6 @@
 import {v1} from "uuid";
 import {TasksStateType} from "../App";
-import {AddTLActionType, RemoveTLActionType, todoListId1, todoListId2} from "./todolists-reducer";
+import {AddTLActionType, RemoveTLActionType} from "./todolists-reducer";
 
 
 export type removeTaskActionType = {
@@ -57,8 +57,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         case "REMOVE-TASK": {
             const stateCopy = {...state};
             const tasks = stateCopy[action.todoListId];
-            const filteredTasks = tasks.filter(el => el.id !== action.taskId);
-            stateCopy[action.todoListId] = filteredTasks;
+            stateCopy[action.todoListId] = tasks.filter(el => el.id !== action.taskId);
             return stateCopy
         }
         case "ADD-TASK": {
@@ -69,37 +68,27 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             return stateCopy;
         }
         case "CHANGE-TASK-STATUS": {
-            // const stateCopy = {...state};
-            // let todolistTasks = stateCopy[action.todolistId];
-            // let task = todolistTasks.find(el => el.id === action.taskId);
-            // if (task) {
-            //     task.isDone = action.isDone;
-            // }
-            // return stateCopy
             return {
                 ...state, [action.todolistId]: state[action.todolistId]
-                    .map(el => {
-                        if (el.id !== action.taskId) {
-                            return el
-                        } else {
-                            return {...el, isDone: action.isDone}
-                        }
-                    })
+                    .map(el => el.id === action.taskId
+                        ? {...el,isDone: action.isDone}
+                        : el)
             }
         }
         case "CHANGE-TASK-TITLE": {
-            const stateCopy = {...state};
-            let todolistTasks = stateCopy[action.todolistId];
-            let task = todolistTasks.find(el => el.id === action.taskId);
-            if (task) {
-                task.title = action.taskTitle;
+            return{
+                ...state, [action.todolistId]:state[action.todolistId]
+                    .map(el => el.id === action.taskId
+                        ? {...el, title: action.taskTitle}
+                        : el)
             }
-            return stateCopy
         }
         case "ADD-TODOLIST": {
-            const stateCopy = {...state};
-            stateCopy[action.todolistId] = [];
-            return stateCopy
+            return {
+                ...state,
+                [action.todolistId]: []
+            }
+
         }
         case "REMOVE-TODOLIST": {
             const stateCopy = {...state};

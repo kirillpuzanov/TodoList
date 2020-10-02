@@ -8,14 +8,19 @@ import {
 } from "./todolists-reducer";
 import {FilterValuesType, ToDoListType} from "../App";
 
-test('correct todolist should be removed', () => {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
-
-    const startState: Array<ToDoListType> = [
+let todolistId1: string;
+let todolistId2: string;
+let startState: Array<ToDoListType> = [];
+beforeEach(() => {
+     todolistId1 = v1();
+     todolistId2 = v1();
+     startState = [
         {id: todolistId1, title: "What to learn", filter: 'All'},
         {id: todolistId2, title: "What to buy", filter: 'All'}
     ]
+})
+
+test('correct todolist should be removed', () => {
 
     const endState = todoListsReducer(startState, RemoveTodolistAC(todolistId1))
 
@@ -24,16 +29,8 @@ test('correct todolist should be removed', () => {
 });
 
 test('correct todolist should be added', () => {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
 
-    let newTodolistTitle = "New Todolist" ;
-
-    const startState: Array<ToDoListType> = [
-        {id: todolistId1, title: "What to learn", filter: "All"},
-        {id: todolistId2, title: "What to buy", filter: "All"}
-    ]
-
+    let newTodolistTitle = "New Todolist";
     const endState = todoListsReducer(startState, AddTodolistAC(newTodolistTitle))
 
     expect(endState.length).toBe(3);
@@ -41,35 +38,18 @@ test('correct todolist should be added', () => {
 });
 
 test('correct todolist should change it"s name', () => {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
-
     let newTodolistTitle = "New Todolist";
 
-    const startState: Array<ToDoListType> = [
-        {id: todolistId1, title: "What to learn", filter: "All"},
-        {id: todolistId2, title: "What to buy", filter: "All"}
-    ]
-
-    const endState = todoListsReducer(startState, ChangeTitleTodolistAC(todolistId2,newTodolistTitle));
+    const endState = todoListsReducer(startState, ChangeTitleTodolistAC(todolistId2, newTodolistTitle));
 
     expect(endState[0].title).toBe("What to learn");
     expect(endState[1].title).toBe(newTodolistTitle);
 });
 
 test('correct filter of todolist should be changed', () => {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
 
-    let newFilter: FilterValuesType = "Completed" ;
-
-    const startState: Array<ToDoListType> = [
-        {id: todolistId1, title: "What to learn", filter: "All"},
-        {id: todolistId2, title: "What to buy", filter: "All"}
-    ]
-
-
-    const endState = todoListsReducer(startState, ChangeFilterTodolistAC(todolistId2,newFilter));
+    let newFilter: FilterValuesType = "Completed";
+    const endState = todoListsReducer(startState, ChangeFilterTodolistAC(todolistId2, newFilter));
 
     expect(endState[0].filter).toBe("All");
     expect(endState[1].filter).toBe(newFilter);

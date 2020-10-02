@@ -6,7 +6,7 @@ type EditableSpanType = {
     changeTitle: (title:string) => void
 }
 
-export function EditableSpan(props: EditableSpanType) {
+export const EditableSpan = React.memo((props: EditableSpanType)=> {
 
     let [editMode, setEditMode] = useState(false)
     let [title, setTitle] = useState(props.title);
@@ -23,7 +23,8 @@ export function EditableSpan(props: EditableSpanType) {
         setTitle(e.currentTarget.value)
     }
     return (
-        editMode ?
+        editMode
+            ?
             <TextField variant='outlined'
                 autoFocus
                 type="text"
@@ -38,4 +39,4 @@ export function EditableSpan(props: EditableSpanType) {
             </span>
 
     )
-}
+})
