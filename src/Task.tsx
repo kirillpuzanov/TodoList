@@ -9,17 +9,17 @@ type TaskPropsType = {
     changeStatus: (id: string, isDone: boolean, todoListId: string) => void
     removeTask: (id: string, todoListId: string) => void
     task: taskType
-    todooListId: string
+    todoListId: string
 }
 export const Task = React.memo((props: TaskPropsType) => {
 
-    const onRemoveHandler = useCallback(() => props.removeTask(props.task.id, props.todooListId),[props.removeTask, props.task.id, props.todooListId]);
+    const onRemoveHandler = useCallback(() => props.removeTask(props.task.id, props.todoListId),[props.removeTask, props.task.id, props.todoListId]);
     const onChangeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        props.changeStatus(props.task.id, e.currentTarget.checked, props.todooListId)
-    },[]);
+        props.changeStatus(props.task.id, e.currentTarget.checked, props.todoListId)
+    },[props.task.id,props.todoListId]);
     const changeTaskTitle = useCallback((newTitle: string) => {
-        props.changeTaskTitle(props.task.id, newTitle, props.todooListId)
-    },[props.task.id, props.todooListId])
+        props.changeTaskTitle(props.task.id, newTitle, props.todoListId)
+    },[props.task.id, props.todoListId])
     return (
         <li key={props.task.id}
             className={props.task.isDone ? 'is-done' : ''}
