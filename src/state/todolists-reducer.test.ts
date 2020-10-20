@@ -8,6 +8,10 @@ import {
 } from "./todolists-reducer";
 import {FilterValuesType, ToDoListType} from "../App";
 
+
+
+
+
 let todolistId1: string;
 let todolistId2: string;
 let startState: Array<ToDoListType> = [];
