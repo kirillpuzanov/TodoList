@@ -1,20 +1,22 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import { TodoList} from "./TodoList";
+import {TodoList} from "./TodoList";
 import {AddItemForm} from "./AddItemForm";
-import {AppBar, Button, IconButton, Typography, Toolbar, Container, Grid, Paper} from "@material-ui/core";
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {
     AddTodolistAC,
     ChangeFilterTodolistAC,
-    ChangeTitleTodolistAC, FilterValuesType,
-    RemoveTodolistAC, TodolistDomainType,
+    ChangeTitleTodolistAC,
+    fetchTodolistsTC,
+    FilterValuesType,
+    RemoveTodolistAC,
+    TodolistDomainType,
 } from "./state/todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
+import {addTaskTC, changeTaskTitleAC, removeTaskTC, updateTaskStatusTC} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/Store";
 import {TaskStatuses, TaskType} from "./api/todolist-api";
-
 
 
 export type TasksStateType = {
@@ -22,54 +24,59 @@ export type TasksStateType = {
 }
 
 function AppWithRedux() {
+
+
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
     const tasks = useSelector<AppRootStateType, TasksStateType>
     (state => state.tasks);
 
-    const  removeTask = useCallback ((id: string, todoListId: string)=> {
-        const action = removeTaskAC(id, todoListId);
-        dispatch(action);
-    },[dispatch])
+    const removeTask = useCallback((id: string, todoListId: string) => {
+        dispatch(removeTaskTC(id,todoListId))
 
-    const  addTask = useCallback((title: string, todoListId: string)=> {
-        const action = addTaskAC(title, todoListId);
-        dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
-
-    const  changeStatus = useCallback ((id: string, status: TaskStatuses, todoListId: string)=> {
-        const action = changeTaskStatusAC(id, status, todoListId);
-        dispatch(action);
-    },[dispatch])
+    useEffect(() => {
+        dispatch(fetchTodolistsTC())
+    }, [])
 
 
-    const  changeTaskTitle = useCallback((id: string, newTitle: string, todoListId: string)=> {
+    const addTask = useCallback((title: string, todoListId: string) => {
+        dispatch(addTaskTC(title,todoListId))
+    }, [dispatch])
+
+
+    const changeStatus = useCallback((id: string, status: TaskStatuses, todoListId: string) => {
+        dispatch(updateTaskStatusTC(todoListId,id,status))
+    }, [dispatch])
+
+
+    const changeTaskTitle = useCallback((id: string, newTitle: string, todoListId: string) => {
         const action = changeTaskTitleAC(id, newTitle, todoListId);
         dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
     //....................функции для тудулистов
 
-    const  changeFilter = useCallback ((todoListId: string, value: FilterValuesType)=> {
+    const changeFilter = useCallback((todoListId: string, value: FilterValuesType) => {
         const action = ChangeFilterTodolistAC(todoListId, value);
         dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
-    const  removeTodoList = useCallback((todoListId: string)=> {
+    const removeTodoList = useCallback((todoListId: string) => {
         const action = RemoveTodolistAC(todoListId);
         dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
-    const  changeTodoListTitle = useCallback((todoListId: string, newTitle: string)=> {
+    const changeTodoListTitle = useCallback((todoListId: string, newTitle: string) => {
         const action = ChangeTitleTodolistAC(todoListId, newTitle);
         dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
     const addTodoList = useCallback((title: string) => {
         const action = AddTodolistAC(title);
         dispatch(action);
-    },[dispatch])
+    }, [dispatch])
 
     return (
         <div className="App">

@@ -2,6 +2,7 @@ import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksRed
 import {AddTodolistAC, RemoveTodolistAC} from "./todolists-reducer";
 import {TasksStateType} from "../AppWithRedux";
 import {TaskStatuses, TodoTaskPriorities} from "../api/todolist-api";
+import {v1} from "uuid";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -97,7 +98,16 @@ test('correct task should be deleted from correct array', () => {
 
 test('correct task should be added to correct array', () => {
 
-    const action = addTaskAC("juce", "todolistId2");
+    const action = addTaskAC({id: v1(),
+        title: 'HTML&CSS',
+        status: TaskStatuses.Completed,
+        priority: TodoTaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: 'todoListId1',
+        order: 0,
+        addedDate: '',
+        description: ''});
 
     const endState = tasksReducer(startState, action)
 

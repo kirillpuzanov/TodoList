@@ -14,7 +14,7 @@ import {
     todoListsReducer
 } from "./state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
-import {TaskStatuses, TodoTaskPriorities} from "./api/todolist-api";
+import {TaskStatuses, TaskType, TodoTaskPriorities} from "./api/todolist-api";
 
 
 function AppWithReducers() {
@@ -89,8 +89,17 @@ function AppWithReducers() {
         dispatchTasks(action);
     }
 
-    function addTask(title: string, todoListId: string) {
-        const action = addTaskAC(title, todoListId);
+    function addTask() {
+        const action = addTaskAC({id: v1(),
+            title: 'HTML&CSS',
+            status: TaskStatuses.Completed,
+            priority: TodoTaskPriorities.Low,
+            startDate: '',
+            deadline: '',
+            todoListId: todoListId1,
+            order: 0,
+            addedDate: '',
+            description: ''});
         dispatchTasks(action);
     }
 
