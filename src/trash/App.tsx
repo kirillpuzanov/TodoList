@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import './App.css';
-import {TodoList} from "./TodoList";
+import '../app/App.css';
+import {TodoList} from "../features/todolistsList/todolist/TodoList";
 import {v1} from "uuid";
-import {AddItemForm} from "./AddItemForm";
+import {AddItemForm} from "../components/addItemForm/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import {TaskStatuses, TodoTaskPriorities} from "./api/todolist-api";
-import {FilterValuesType, TodolistDomainType} from "./state/todolists-reducer";
-import {TasksStateType} from "./AppWithRedux";
+import {TaskStatuses, TodoTaskPriorities} from "../api/todolist-api";
+import {FilterValuesType, TodolistDomainType} from "../state/todolists-reducer";
+import {TasksStateType} from "../state/tasks-reducer";
 
 
 function App() {

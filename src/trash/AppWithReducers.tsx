@@ -1,20 +1,20 @@
 import React, {useReducer} from 'react';
-import './App.css';
-import {TodoList} from "./TodoList";
+import '../app/App.css';
+import {TodoList} from "../features/todolistsList/todolist/TodoList";
 import {v1} from "uuid";
-import {AddItemForm} from "./AddItemForm";
+import {AddItemForm} from "../components/addItemForm/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {
-    AddTodolistAC,
-    ChangeFilterTodolistAC,
-    ChangeTitleTodolistAC,
+    addTodolistAC,
+    changeFilterTodolistAC,
+    changeTitleTodolistAC,
     FilterValuesType,
-    RemoveTodolistAC,
+    removeTodolistAC,
     todoListsReducer
-} from "./state/todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
-import {TaskStatuses, TaskType, TodoTaskPriorities} from "./api/todolist-api";
+} from "../state/todolists-reducer";
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "../state/tasks-reducer";
+import {TaskStatuses, TodoTaskPriorities} from "../api/todolist-api";
 
 
 function AppWithReducers() {
@@ -24,7 +24,7 @@ function AppWithReducers() {
 // стэйт который обрабатывает тудулисты
     let [todoLists, dispatchTodolists] = useReducer(todoListsReducer, [
         {id: todoListId1, title: 'What to learn?', filter: 'Active', addedDate: '', order: 0},
-        {id: todoListId2, title: 'What to buy?', filter: 'Completed',addedDate: '', order: 1}
+        {id: todoListId2, title: 'What to buy?', filter: 'Completed', addedDate: '', order: 1}
     ]);
 
 // стэйт который обрабатывает таски
@@ -90,7 +90,8 @@ function AppWithReducers() {
     }
 
     function addTask() {
-        const action = addTaskAC({id: v1(),
+        const action = addTaskAC({
+            id: v1(),
             title: 'HTML&CSS',
             status: TaskStatuses.Completed,
             priority: TodoTaskPriorities.Low,
@@ -99,7 +100,8 @@ function AppWithReducers() {
             todoListId: todoListId1,
             order: 0,
             addedDate: '',
-            description: ''});
+            description: ''
+        });
         dispatchTasks(action);
     }
 
@@ -118,24 +120,29 @@ function AppWithReducers() {
     //....................функции для тудулистов
 
     function changeFilter(todoListId: string, value: FilterValuesType) {
-        const action = ChangeFilterTodolistAC(todoListId, value);
+        const action = changeFilterTodolistAC(todoListId, value);
         dispatchTodolists(action);
     }
 
     function removeTodoList(todoListId: string) {
-        const action = RemoveTodolistAC(todoListId);
+        const action = removeTodolistAC(todoListId);
         dispatchTodolists(action);
         dispatchTasks(action);
 
     }
 
     function changeTodoListTitle(todoListId: string, newTitle: string) {
-        const action = ChangeTitleTodolistAC(todoListId, newTitle);
+        const action = changeTitleTodolistAC(todoListId, newTitle);
         dispatchTodolists(action);
     }
 
     function addTodoList(title: string) {
-        const action = AddTodolistAC(title);
+        const action = addTodolistAC({
+            order: 0,
+            addedDate: '',
+            id: v1(),
+            title: title
+        });
         dispatchTodolists(action);
         dispatchTasks(action);
     }

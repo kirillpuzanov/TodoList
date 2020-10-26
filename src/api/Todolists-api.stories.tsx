@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {todolistApi} from "../api/todolist-api";
+import {todolistApi} from "./todolist-api";
 
 export default {
     title: 'API'
@@ -90,7 +90,7 @@ export const updateTask = () => {
             startDate: new Date().toDateString(),
             deadline: '2021-10-10'
         }
-        todolistApi.updateTask(todolistId,taskId,modelTask)
+        todolistApi.updateTask(taskId,modelTask,todolistId)
             .then((response) => setState(response.data))
     }, [])
 
