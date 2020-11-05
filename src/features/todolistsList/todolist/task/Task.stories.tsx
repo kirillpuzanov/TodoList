@@ -25,12 +25,15 @@ export const TaskBaseExample = (props: any) => {
                     todoListId: 'todoListId1',
                     order: 0,
                     addedDate: '',
-                    description: '', title: 'CSS'
+                    description: '',
+                    title: 'CSS',
+
                 }}
                 todoListId={'todolistId1'}
                 removeTask={removeTaskCallback}
                 changeStatus={changeStatusCallback}
                 changeTaskTitle={changeTaskTitleCallback}
+                entityStatus={'idle'}
             />
             <Task
                 task={{
@@ -41,12 +44,15 @@ export const TaskBaseExample = (props: any) => {
                     todoListId: 'todoListId1',
                     order: 0,
                     addedDate: '',
-                    description: '', title: 'HTML'
+                    description: '',
+                    title: 'HTML',
+
                 }}
                 todoListId={'todolistId2'}
                 removeTask={removeTaskCallback}
                 changeStatus={changeStatusCallback}
                 changeTaskTitle={changeTaskTitleCallback}
+                entityStatus={'idle'}
             />
         </div>
     )

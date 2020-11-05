@@ -10,18 +10,20 @@ const instance = axios.create({
     //api
 export const todolistApi = {
     //todolists
+    getTodolists() {
+        return instance.get<Array<TodolistType>>('todo-lists')
+    },
+    createTodolist(title: string) {
+        return instance.post<ResponseType<{ item: TodolistType }>>('todo-lists', {title: title})
+    },
     updateTodolist(todolistId: string, title: string) {
         return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title: title})
     },
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`)
     },
-    createTodolist(title: string) {
-        return instance.post<ResponseType<{ item: TodolistType }>>('todo-lists', {title: title})
-    },
-    getTodolists() {
-        return instance.get<Array<TodolistType>>('todo-lists')
-    },
+
+
 
     //tasks
     getTasks(todolistId: string) {
@@ -45,7 +47,27 @@ export type TodolistType = {
     order: number
     title: string
 }
-type ResponseType<D = {}> = {
+export type TaskType = {
+    description: string
+    title: string
+    status: TaskStatuses
+    priority: TodoTaskPriorities
+    startDate: string
+    deadline: string
+    id: string
+    todoListId: string
+    order: number
+    addedDate: string
+}
+export type modelTaskType = {
+    title: string
+    description: string
+    status: number
+    priority: number
+    startDate: string
+    deadline: string
+}
+export type ResponseType<D = {}> = {
     resultCode: number
     messages: Array<string>
     data: D
@@ -67,24 +89,4 @@ export enum TodoTaskPriorities {
     Hi = 2,
     Urgently = 3,
     Later = 4
-}
-export type TaskType = {
-    description: string
-    title: string
-    status: TaskStatuses
-    priority: TodoTaskPriorities
-    startDate: string
-    deadline: string
-    id: string
-    todoListId: string
-    order: number
-    addedDate: string
-}
-export type modelTaskType = {
-    title: string
-    description: string
-    status: number
-    priority: number
-    startDate: string
-    deadline: string
 }

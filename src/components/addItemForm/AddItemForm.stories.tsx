@@ -13,6 +13,7 @@ export const AddItemFormBaseExample = (props: any) => {
     return (
         <AddItemForm
             addItem={action('Button inside form clicked')}
+            entityStatus={'idle'}
         />
     )
 };

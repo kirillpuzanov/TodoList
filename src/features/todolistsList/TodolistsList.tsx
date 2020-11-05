@@ -1,5 +1,5 @@
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../state/Store";
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from '../../state/Store';
 import {
     changeFilterTodolistAC,
     changeTitleTodolistTC,
@@ -8,22 +8,23 @@ import {
     getTodolistsTC,
     removeTodolistTC,
     TodolistDomainType
-} from "../../state/todolists-reducer";
-import React, {useCallback, useEffect} from "react";
+} from '../../state/todolists-reducer';
+import React, {useCallback, useEffect} from 'react';
 import {
     addTaskTC,
     changeTaskTitleTC,
     removeTaskTC,
     TasksStateType,
     updateTaskStatusTC
-} from "../../state/tasks-reducer";
-import {TaskStatuses} from "../../api/todolist-api";
-import {Grid, Paper} from "@material-ui/core";
-import {AddItemForm} from "../../components/addItemForm/AddItemForm";
-import {TodoList} from "./todolist/TodoList";
+} from '../../state/tasks-reducer';
+import {TaskStatuses} from '../../api/todolist-api';
+import {Grid, Paper} from '@material-ui/core';
+import {AddItemForm} from '../../components/addItemForm/AddItemForm';
+import {TodoList} from './todolist/TodoList';
+
+
 
 export const TodolistsList = () => {
-
 
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
@@ -62,6 +63,7 @@ export const TodolistsList = () => {
 
     const removeTodoList = useCallback((todoListId: string) => {
         dispatch(removeTodolistTC(todoListId))
+
     }, [dispatch])
 
     const changeTodoListTitle = useCallback((todoListId: string, newTitle: string) => {
@@ -75,7 +77,7 @@ export const TodolistsList = () => {
 
     return <>
         <Grid container style={{padding: '20px'}}>
-            <AddItemForm addItem={addTodoList}/>
+            <AddItemForm addItem={addTodoList} entityStatus={'idle'}/>
         </Grid>
         <Grid container spacing={3}>
             {
@@ -85,15 +87,13 @@ export const TodolistsList = () => {
                         <Paper style={{padding: '10px'}}>
                             <TodoList
                                 key={tl.id}
-                                id={tl.id}
-                                title={tl.title}
+                                todolist={tl}
                                 tasks={tasksForTodoList}
                                 removeTask={removeTask}
                                 changeFilter={changeFilter}
                                 addTask={addTask}
                                 changeStatus={changeStatus}
                                 removeTodoList={removeTodoList}
-                                filter={tl.filter}
                                 changeTaskTitle={changeTaskTitle}
                                 changeTodoListTitle={changeTodoListTitle}
                             />
