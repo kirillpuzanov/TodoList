@@ -27,6 +27,9 @@ export const changeTaskTitleAC = (taskId: string, taskTitle: string, todolistId:
 export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) => {
     return ({type: 'SET-TASKS', tasks, todolistId} as const)
 }
+export const changeTaskEntityStatus = (id: string, todolistId: string, entityStatus: RequestStatusType) => {
+    return ({type: 'CHANGE-TASK-ENTITY-STATUS', id, todolistId, entityStatus} as const)
+}
 
 /////// thunk's
 type ThunkType = ThunkAction<void, AppRootStateType, unknown, ActionsType>
@@ -44,6 +47,7 @@ export const getTasksTC = (todolistId: string): ThunkType => (dispatch) => {
 }
 export const removeTaskTC = (taskId: string, todolistId: string): ThunkType => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTaskEntityStatus(taskId, todolistId, 'loading'))
     todolistApi.deleteTask(taskId, todolistId)
         .then((res) => {
             if (res.data.resultCode === 0) {
@@ -74,31 +78,9 @@ export const addTaskTC = (taskTitle: string, todolistId: string): ThunkType => (
         })
 }
 
-////////  с ипользованием try catch
-// export const addTaskTC = (taskTitle: string, todolistId: string): ThunkType => async (dispatch) => {
-//     try {
-//         dispatch(setAppStatusAC('loading'))
-//         let res = await todolistApi.createTask(taskTitle, todolistId)
-//
-//         if (res.data.resultCode === 0) {
-//             dispatch(addTaskAC(res.data.data.item))
-//             dispatch(setAppStatusAC('succeeded'))
-//         } else {
-//             if (res.data.messages.length) {
-//                 dispatch(setAppErrorAC(res.data.messages[0]))
-//             } else {
-//                 dispatch(setAppErrorAC('Some error occurred'))
-//             }
-//             dispatch(setAppStatusAC('failed'))
-//         }
-//     } catch (err) {
-//         dispatch(setAppErrorAC(err.message))
-//         dispatch(setAppStatusAC('failed'))
-//     }
-// }
-
 export const updateTaskStatusTC = (taskId: string, status: TaskStatuses, todolistId: string): ThunkType => (dispatch, getState: () => AppRootStateType) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTaskEntityStatus(taskId, todolistId, 'loading'))
     const tasks = getState().tasks[todolistId]
     const currentTask = tasks.find(t => t.id === taskId)
     if (currentTask) {
@@ -114,6 +96,7 @@ export const updateTaskStatusTC = (taskId: string, status: TaskStatuses, todolis
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskStatusAC(taskId, status, todolistId))
                     dispatch(setAppStatusAC('succeeded'))
+                    dispatch(changeTaskEntityStatus(taskId, todolistId, 'succeeded'))
                 } else {
                     handleServerError(res.data, dispatch)
                 }
@@ -125,6 +108,7 @@ export const updateTaskStatusTC = (taskId: string, status: TaskStatuses, todolis
 }
 export const changeTaskTitleTC = (id: string, newTitle: string, todoListId: string): ThunkType => (dispatch, getState: () => AppRootStateType) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTaskEntityStatus(id, todoListId, 'loading'))
     const tasks = getState().tasks[todoListId]
     const currentTask = tasks.find(el => el.id === id)
     if (currentTask) {
@@ -140,6 +124,7 @@ export const changeTaskTitleTC = (id: string, newTitle: string, todoListId: stri
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskTitleAC(id, newTitle, todoListId))
                     dispatch(setAppStatusAC('succeeded'))
+                    dispatch(changeTaskEntityStatus(id, todoListId, 'succeeded'))
                 } else {
                     handleServerError(res.data, dispatch)
                 }
@@ -152,12 +137,10 @@ export const changeTaskTitleTC = (id: string, newTitle: string, todoListId: stri
 }
 
 
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
-// export type TaskDomainType = TaskType & {entityTaskStatus: RequestStatusType}
-
+export type TasksStateType = { [key: string]: Array<TaskDomainType> }
+export type TaskDomainType = TaskType & { entityTaskStatus: RequestStatusType }
 const initialState: TasksStateType = {}
+
 export const tasksReducer = (state: TasksStateType = initialState, action: ActionsType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK': {
@@ -169,7 +152,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         case 'ADD-TASK': {
             return {
                 ...state,
-                [action.task.todoListId]: [action.task, ...state[action.task.todoListId]]
+                [action.task.todoListId]: [{...action.task, entityTaskStatus: 'idle'}, ...state[action.task.todoListId]]
             }
         }
         case 'CHANGE-TASK-STATUS': {
@@ -204,7 +187,17 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             return stateCopy;
         }
         case 'SET-TASKS':
-            return {...state, [action.todolistId]: action.tasks}
+            return {...state, [action.todolistId]: action.tasks.map(el => ({...el, entityTaskStatus: 'idle'}))}
+        case 'CHANGE-TASK-ENTITY-STATUS': {
+            return {
+                ...state,
+                [action.todolistId]: state[action.todolistId]
+                    .map(el => el.id === action.id
+                        ? {...el, entityTaskStatus: action.entityStatus}
+                        : el)
+            }
+        }
+
         default:
             return state;
     }
@@ -216,8 +209,33 @@ type ActionsType =
     | ReturnType<typeof changeTaskStatusAC>
     | ReturnType<typeof changeTaskTitleAC>
     | ReturnType<typeof setTasksAC>
+    | ReturnType<typeof changeTaskEntityStatus>
     | AddTLActionType
     | RemoveTLActionType
     | SetTodolistsACType
     | SetAppStatusACType
     | SetAppErrorACType;
+
+
+//////// addTaskTC  с ипользованием try catch
+// export const addTaskTC = (taskTitle: string, todolistId: string): ThunkType => async (dispatch) => {
+//     try {
+//         dispatch(setAppStatusAC('loading'))
+//         let res = await todolistApi.createTask(taskTitle, todolistId)
+//
+//         if (res.data.resultCode === 0) {
+//             dispatch(addTaskAC(res.data.data.item))
+//             dispatch(setAppStatusAC('succeeded'))
+//         } else {
+//             if (res.data.messages.length) {
+//                 dispatch(setAppErrorAC(res.data.messages[0]))
+//             } else {
+//                 dispatch(setAppErrorAC('Some error occurred'))
+//             }
+//             dispatch(setAppStatusAC('failed'))
+//         }
+//     } catch (err) {
+//         dispatch(setAppErrorAC(err.message))
+//         dispatch(setAppStatusAC('failed'))
+//     }
+// }

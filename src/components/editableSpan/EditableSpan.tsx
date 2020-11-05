@@ -20,8 +20,8 @@ export const EditableSpan = React.memo((props: EditableSpanType) => {
             setEditMode(true)
             setTitle(props.title)
         }
-
     }
+
     const disActivatedEditMode = () => {
         setEditMode(false)
         props.changeTitle(title)

@@ -27,6 +27,7 @@ export const TaskBaseExample = (props: any) => {
                     addedDate: '',
                     description: '',
                     title: 'CSS',
+                    entityTaskStatus:'idle'
 
                 }}
                 todoListId={'todolistId1'}
@@ -46,6 +47,7 @@ export const TaskBaseExample = (props: any) => {
                     addedDate: '',
                     description: '',
                     title: 'HTML',
+                    entityTaskStatus:'idle',
 
                 }}
                 todoListId={'todolistId2'}
