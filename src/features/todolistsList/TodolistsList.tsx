@@ -21,6 +21,7 @@ import {TaskStatuses} from '../../api/todolist-api';
 import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../components/addItemForm/AddItemForm';
 import {TodoList} from './todolist/TodoList';
+import {Redirect} from 'react-router-dom';
 
 
 
@@ -32,6 +33,9 @@ export const TodolistsList = () => {
     (state => state.tasks);
 
     useEffect(() => {
+        if(!isLoggedIn){
+            return
+        }
         dispatch(getTodolistsTC())
     }, [])
 
@@ -74,6 +78,11 @@ export const TodolistsList = () => {
         dispatch(createTodolistTC(title));
     }, [dispatch])
 
+    const isLoggedIn = useSelector<AppRootStateType, boolean>( state =>state.auth.isLoggedIn );
+
+    if(!isLoggedIn) {
+        return <Redirect to={'/login'}/>
+    }
 
     return <>
         <Grid container style={{padding: '20px'}}>

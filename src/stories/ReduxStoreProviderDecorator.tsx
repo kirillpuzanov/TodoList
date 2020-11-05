@@ -17,8 +17,8 @@ const rootReducer = combineReducers({
 
 const initialGlobalState: AppRootStateType = {
     todolists: [
-        {id: 'todolistId1', title: 'What to learn',entityStatus: 'idle', filter: 'All', addedDate: '', order: 0},
-        {id: 'todolistId2', title: 'What to buy',entityStatus: 'idle', filter: 'All', addedDate: '', order: 0}
+        {id: 'todolistId1', title: 'What to learn', entityStatus: 'idle', filter: 'All', addedDate: '', order: 0},
+        {id: 'todolistId2', title: 'What to buy', entityStatus: 'idle', filter: 'All', addedDate: '', order: 0}
     ],
     tasks: {
         ['todolistId1']: [
@@ -31,7 +31,7 @@ const initialGlobalState: AppRootStateType = {
                 order: 0,
                 addedDate: '',
                 description: '',
-                entityTaskStatus:'idle'
+                entityTaskStatus: 'idle'
             },
             {
                 id: v1(), title: 'JS', status: TaskStatuses.New,
@@ -42,7 +42,7 @@ const initialGlobalState: AppRootStateType = {
                 order: 0,
                 addedDate: '',
                 description: '',
-                entityTaskStatus:'idle'
+                entityTaskStatus: 'idle'
             }
         ],
         ['todolistId2']: [
@@ -55,7 +55,7 @@ const initialGlobalState: AppRootStateType = {
                 order: 0,
                 addedDate: '',
                 description: '',
-                entityTaskStatus:'idle'
+                entityTaskStatus: 'idle'
             },
             {
                 id: v1(), title: 'React Book', status: TaskStatuses.Completed,
@@ -66,14 +66,18 @@ const initialGlobalState: AppRootStateType = {
                 order: 0,
                 addedDate: '',
                 description: '',
-                entityTaskStatus:'idle'
+                entityTaskStatus: 'idle'
             }
         ]
     },
     app: {
         status: 'idle',
         error: '',
-    }
+        isInitialized: false,
+    },
+    auth: {
+        isLoggedIn: false
+    },
 };
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState);

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -7,8 +7,23 @@ const instance = axios.create({
         'API-KEY': 'aee1e098-c1ec-45af-b764-0edfc4a89fa8'
     }
 })
-    //api
+//api
+
+export const authApi = {
+    me() {
+        return instance.get<{ data: authDataType, resultCode: number, messages: string[] }>('auth/me')
+    },
+    login(data: LoginParamsType) {
+        return instance.post<ResponseType<{ userId: number }>>('auth/login', data)
+    },
+    logout(){
+        return instance.delete<ResponseType>('auth/login')
+    }
+
+}
+
 export const todolistApi = {
+
     //todolists
     getTodolists() {
         return instance.get<Array<TodolistType>>('todo-lists')
@@ -22,7 +37,6 @@ export const todolistApi = {
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`)
     },
-
 
 
     //tasks
@@ -40,7 +54,19 @@ export const todolistApi = {
     }
 }
 
-    // types
+// types
+export type authDataType = {
+    id: null | number
+    email: null | string
+    login: null | string
+}
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
 export type TodolistType = {
     id: string
     addedDate: string
@@ -77,12 +103,14 @@ export type TasksResponseType = {
     totalCount: number
     error: null | string
 }
+
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
     Completed = 2,
     Draft = 3
 }
+
 export enum TodoTaskPriorities {
     Low = 0,
     Middle = 1,

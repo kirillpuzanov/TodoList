@@ -3,16 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './trash/App';
 import * as serviceWorker from './serviceWorker';
-import AppWithReducers from "./trash/AppWithReducers";
-import {Provider} from "react-redux";
-import {store} from "./state/Store";
-import AppWithRedux from "./app/AppWithRedux";
+import AppWithReducers from './trash/AppWithReducers';
+import {Provider} from 'react-redux';
+import {store} from './state/Store';
+import AppWithRedux from './app/AppWithRedux';
+import {BrowserRouter} from 'react-router-dom';
 
 ReactDOM.render(
     <Provider store={store}>
-    <AppWithRedux />
+        <BrowserRouter>
+            <AppWithRedux/>
+        </BrowserRouter>
     </Provider>
-    ,  document.getElementById('root'));
+    , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
