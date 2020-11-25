@@ -5,7 +5,7 @@ import {useFormik} from 'formik';
 import {useDispatch, useSelector} from 'react-redux';
 import {loginTC} from '../../state/authReducer';
 import {AppRootStateType} from '../../state/Store';
-import { Redirect } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 type FormikErrorType = {
     email?: string
@@ -17,8 +17,7 @@ type FormikErrorType = {
 export const Login = () => {
 
     const dispatch = useDispatch();
-    const isLoggedIn = useSelector<AppRootStateType, boolean>( state =>state.auth.isLoggedIn );
-
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn);
 
 
     const formik = useFormik({
@@ -47,7 +46,7 @@ export const Login = () => {
         },
     })
 
-    if(isLoggedIn) {
+    if (isLoggedIn) {
         return <Redirect to={'/'}/>
     }
 

@@ -24,7 +24,6 @@ import {TodoList} from './todolist/TodoList';
 import {Redirect} from 'react-router-dom';
 
 
-
 export const TodolistsList = () => {
 
     const dispatch = useDispatch();
@@ -33,7 +32,7 @@ export const TodolistsList = () => {
     (state => state.tasks);
 
     useEffect(() => {
-        if(!isLoggedIn){
+        if (!isLoggedIn) {
             return
         }
         dispatch(getTodolistsTC())
@@ -61,7 +60,7 @@ export const TodolistsList = () => {
 //....................функции для тудулистов
 
     const changeFilter = useCallback((todoListId: string, value: FilterValuesType) => {
-        const action = changeFilterTodolistAC(todoListId, value);
+        const action = changeFilterTodolistAC({id: todoListId, filter: value});
         dispatch(action);
     }, [dispatch])
 
@@ -78,9 +77,9 @@ export const TodolistsList = () => {
         dispatch(createTodolistTC(title));
     }, [dispatch])
 
-    const isLoggedIn = useSelector<AppRootStateType, boolean>( state =>state.auth.isLoggedIn );
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn);
 
-    if(!isLoggedIn) {
+    if (!isLoggedIn) {
         return <Redirect to={'/login'}/>
     }
 

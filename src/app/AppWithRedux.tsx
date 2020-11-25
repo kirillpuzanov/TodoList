@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {
     AppBar,
@@ -31,18 +31,17 @@ function AppWithRedux() {
         dispatch(initializeAppTC())
     }, [])
 
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    },[])
+
     if (!isInitialized) {
         return <div
             style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
             <CircularProgress/>
         </div>
     }
-
-    const logoutHandler = () => {
-        dispatch(logoutTC())
-    }
-
-
+    
     return (
         <div className="App">
             <ErrorSnackbar/>

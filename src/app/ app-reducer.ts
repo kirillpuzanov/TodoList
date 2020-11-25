@@ -2,45 +2,46 @@ import {ThunkAction} from 'redux-thunk';
 import {AppRootStateType} from '../state/Store';
 import {authApi} from '../api/todolist-api';
 import {setIsLoggedInAC, SetIsLoggedInACType} from '../state/authReducer';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 
-export const setAppStatusAC = (status: RequestStatusType) => {
-    return ({type: 'APP/SET-STATUS', status} as const)
+const initialState: InitialStateType = {
+    status: 'idle',
+    error: null,
+    isInitialized: false,
 }
-export const setAppErrorAC = (error: string | null) => {
-    return ({type: 'APP/SET-ERROR', error} as const)
-}
-export const setInitializingAppAC = (isInitialized: boolean) => {
-    return ({type: 'APP/INITIALIZING-APP', isInitialized} as const)
-}
+
+const slice = createSlice({
+    name:'app',
+    initialState:initialState,
+    reducers:{
+        setAppStatusAC(state,action:PayloadAction<{status: RequestStatusType}>){
+            state.status = action.payload.status;
+        },
+        setAppErrorAC(state,action:PayloadAction<{error: string | null}>){
+            state.error = action.payload.error;
+        },
+        setInitializingAppAC(state,action:PayloadAction<{isInitialized: boolean}>){
+            state.isInitialized = action.payload.isInitialized;
+        }
+    }
+})
+
+export const appReducer = slice.reducer;
+export const {setAppStatusAC,setAppErrorAC,setInitializingAppAC} = slice.actions;
 
 //thunk
-type ThunkType = ThunkAction<void, AppRootStateType, unknown, ActionsType>
+type ThunkType = ThunkAction<void, AppRootStateType, unknown, any>
 export const initializeAppTC = (): ThunkType => (dispatch) => {
     authApi.me().then(res => {
-        dispatch(setInitializingAppAC(true))
+        dispatch(setInitializingAppAC({isInitialized:true}))
         if (res.data.resultCode === 0) {
-            dispatch(setIsLoggedInAC(true));
+            dispatch(setIsLoggedInAC({value: true}));
         } else {
         }
     })
 }
 
-
-export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
-    switch (action.type) {
-        case 'APP/SET-STATUS':
-            return {...state, status: action.status}
-        case 'APP/SET-ERROR': {
-            return {...state, error: action.error}
-        }
-        case 'APP/INITIALIZING-APP':{
-            return {...state, isInitialized:action.isInitialized}
-        }
-        default:
-            return state
-    }
-}
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 export type InitialStateType = {
@@ -49,18 +50,13 @@ export type InitialStateType = {
     error: string | null
     isInitialized: boolean
 }
-const initialState: InitialStateType = {
-    status: 'idle',
-    error: null,
-    isInitialized: false,
-}
+
 export type SetAppStatusACType = ReturnType<typeof setAppStatusAC>
 export type SetAppErrorACType = ReturnType<typeof setAppErrorAC>
 export type SetInitializingAppACType = ReturnType<typeof setInitializingAppAC>
 export type ActionsType =
     | SetAppStatusACType
     | SetAppErrorACType
-    | SetIsLoggedInACType
     | SetInitializingAppACType
 
 

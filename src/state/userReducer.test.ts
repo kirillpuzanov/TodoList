@@ -1,6 +1,4 @@
-import React from 'react';
-import {userReducer} from "./userReducer";
-
+import {userReducer} from './userReducer';
 
 
 test('user reducer should increment only age', () => {
