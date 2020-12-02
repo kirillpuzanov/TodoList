@@ -13,9 +13,9 @@ const slice = createSlice({
     name: 'todoolists',
     initialState: initialState,
     reducers: {
-        removeTodolistAC(state, action: PayloadAction<{ todolistId: string }>) {
+        removeTodolistAC(state, action: PayloadAction<{ todoListId: string }>) {
             // state.filter(tl => tl.id != action.payload.todolistId)
-            const index = state.findIndex(tl => tl.id === action.payload.todolistId)
+            const index = state.findIndex(tl => tl.id === action.payload.todoListId)
             state.splice(index, 1)
         },
         addTodolistAC(state, action: PayloadAction<{ todolist: TodolistType }>) {
@@ -108,7 +108,7 @@ export const removeTodolistTC = (todolistId: string): ThunkType => (dispatch) =>
     todolistApi.deleteTodolist(todolistId)
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(removeTodolistAC({todolistId: todolistId}));
+                dispatch(removeTodolistAC({todoListId: todolistId}));
                 dispatch(setAppStatusAC({status: 'succeeded'}))
             } else {
                 handleServerError(res.data, dispatch)
