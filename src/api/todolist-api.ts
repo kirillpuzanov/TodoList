@@ -16,7 +16,7 @@ export const authApi = {
     login(data: LoginParamsType) {
         return instance.post<ResponseType<{ userId: number }>>('auth/login', data)
     },
-    logout(){
+    logout() {
         return instance.delete<ResponseType>('auth/login')
     }
 
@@ -76,7 +76,7 @@ export type TodolistType = {
 export type TaskType = {
     description: string
     title: string
-    status: TaskStatuses
+    status: TaskStatuses | string
     priority: TodoTaskPriorities
     startDate: string
     deadline: string
@@ -88,14 +88,17 @@ export type TaskType = {
 export type modelTaskType = {
     title: string
     description: string
-    status: number
+    status: TaskStatuses | string
     priority: number
     startDate: string
     deadline: string
 }
+
+export type FieldErrorType = { field: string, error: string };
 export type ResponseType<D = {}> = {
     resultCode: number
     messages: Array<string>
+    fieldsErrors?: Array<FieldErrorType>
     data: D
 }
 export type TasksResponseType = {

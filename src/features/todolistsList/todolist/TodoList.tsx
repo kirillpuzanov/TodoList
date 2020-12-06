@@ -7,7 +7,7 @@ import {Task} from './task/Task';
 import {TaskStatuses} from '../../../api/todolist-api';
 import {FilterValuesType, TodolistDomainType} from '../../../state/todolists-reducer';
 import {useDispatch} from 'react-redux';
-import {getTasksTC, TaskDomainType} from '../../../state/tasks-reducer';
+import {getTasks, TaskDomainType} from '../../../state/tasks-reducer';
 
 
 type TodoListPropsType = {
@@ -26,7 +26,7 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getTasksTC(props.todolist.id))
+        dispatch(getTasks(props.todolist.id))
     }, [])
 
     const onAllClickHandler = useCallback(() => props.changeFilter(props.todolist.id, 'All')

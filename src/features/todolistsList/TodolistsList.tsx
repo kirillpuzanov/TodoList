@@ -1,22 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../state/Store';
 import {
-    changeFilterTodolistAC,
-    changeTitleTodolistTC,
-    createTodolistTC,
+    addTodolistTC,
+    changeFilterTodolistAC, changeTitleTodolistTC,
     FilterValuesType,
-    getTodolistsTC,
-    removeTodolistTC,
+    getTodolists, removeTodolistTC,
     TodolistDomainType
 } from '../../state/todolists-reducer';
 import React, {useCallback, useEffect} from 'react';
-import {
-    addTaskTC,
-    changeTaskTitleTC,
-    removeTaskTC,
-    TasksStateType,
-    updateTaskStatusTC
-} from '../../state/tasks-reducer';
+import {addTaskTC, removeTaskTC, TasksStateType, updateTask,} from '../../state/tasks-reducer';
 import {TaskStatuses} from '../../api/todolist-api';
 import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../components/addItemForm/AddItemForm';
@@ -35,26 +27,26 @@ export const TodolistsList = () => {
         if (!isLoggedIn) {
             return
         }
-        dispatch(getTodolistsTC())
+        dispatch(getTodolists())
     }, [])
 
     const removeTask = useCallback((taskId: string, todoListId: string) => {
-        dispatch(removeTaskTC({taskId, todoListId: todoListId}))
+        dispatch(removeTaskTC({taskId, todoListId}))
 
     }, [dispatch])
 
     const addTask = useCallback((taskTitle: string, todoListId: string) => {
-        dispatch(addTaskTC({taskTitle, todoListId: todoListId}))
+        dispatch(addTaskTC({taskTitle, todoListId}))
     }, [dispatch])
 
 
     const changeStatus = useCallback((id: string, status: TaskStatuses, todoListId: string) => {
-        dispatch(updateTaskStatusTC(id, status, todoListId))
+        dispatch(updateTask({taskId:id, model:{status}, todoListId}))
     }, [dispatch])
 
 
     const changeTaskTitle = useCallback((id: string, newTitle: string, todoListId: string) => {
-        dispatch(changeTaskTitleTC(id, newTitle, todoListId))
+        dispatch(updateTask({taskId:id, model:{title:newTitle}, todoListId}))
     }, [dispatch])
 
 //....................функции для тудулистов
@@ -70,11 +62,11 @@ export const TodolistsList = () => {
     }, [dispatch])
 
     const changeTodoListTitle = useCallback((todoListId: string, newTitle: string) => {
-        dispatch(changeTitleTodolistTC(todoListId, newTitle))
+        dispatch(changeTitleTodolistTC({todoListId, newTitle}))
     }, [dispatch])
 
     const addTodoList = useCallback((title: string) => {
-        dispatch(createTodolistTC(title));
+        dispatch(addTodolistTC(title));
     }, [dispatch])
 
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn);

@@ -1,7 +1,7 @@
 
-import AppWithRedux from "./AppWithRedux";
+import AppWithRedux from "../app/App";
 import React from "react";
-import {ReduxStoreProviderDecorator} from "../stories/ReduxStoreProviderDecorator";
+import {ReduxStoreProviderDecorator} from "./ReduxStoreProviderDecorator";
 
 
 

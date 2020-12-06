@@ -1,71 +1,65 @@
-import {setAppErrorAC, SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from '../app/ app-reducer';
-import {ThunkAction} from 'redux-thunk';
-import {AppRootStateType} from './Store';
-import {authApi, LoginParamsType} from '../api/todolist-api';
-import {handleServerError} from '../utils/error-utils';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+import {authApi, FieldErrorType, LoginParamsType} from '../api/todolist-api';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils';
+import {appActions} from '../commonAcnions/appActions';
 
 
-const initialState = {
-    isLoggedIn: false
-}
+//типизация createAsyncThunk <1 возвращаемое значение, 2 что приходит в санку(аргументы),
+// 3 описываем ошибку  { rejectValue: наши ошибки}>
+
+export const loginTC = createAsyncThunk<undefined,
+    LoginParamsType, { rejectValue: { errors: string[], fieldsErrors?: FieldErrorType[] } }>
+('auth/login', async (data, thunkAPI) => {
+    thunkAPI.dispatch(appActions.setAppStatusAC({status: 'loading'}))
+    try {
+        const res = await authApi.login(data)
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(appActions.setAppStatusAC({status: 'succeeded'}))
+            return
+        } else {
+            return handleServerAppError(res.data, thunkAPI)
+        }
+    } catch (err) {
+        return handleServerNetworkError(err.message, thunkAPI)
+    }
+})
+
+export const logoutTC = createAsyncThunk('auth/logout', async (param, thunkAPI) => {
+    thunkAPI.dispatch(appActions.setAppStatusAC({status: 'loading'}))
+    try {
+        const res = await authApi.logout()
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(appActions.setAppStatusAC({status: 'succeeded'}))
+        } else handleServerAppError(res.data, thunkAPI)
+    } catch (err) {
+        return handleServerNetworkError(err.message, thunkAPI)
+    }
+})
+
 
 const slice = createSlice({
     name: 'auth',
-    initialState: initialState,
+    initialState: {
+        isLoggedIn: false
+    },
     reducers: {
         setIsLoggedInAC(state, action: PayloadAction<{ value: boolean }>) {
             state.isLoggedIn = action.payload.value;
         }
     },
+    extraReducers: builder => {
+        builder.addCase(loginTC.fulfilled, (state, action) => {
+            state.isLoggedIn = true;
+        })
+        builder.addCase(logoutTC.fulfilled, (state, action) => {
+            state.isLoggedIn = false;
+        })
+    }
 })
 
 export const authReducer = slice.reducer;
-
 export const {setIsLoggedInAC} = slice.actions;
 
-//thunk
-type ThunkType = ThunkAction<void, AppRootStateType, unknown, any>
-export const loginTC = (data: LoginParamsType): ThunkType =>
-    (dispatch) => {
-        dispatch(setAppStatusAC({status:'loading'}))
-        authApi.login(data)
-            .then((res) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(setIsLoggedInAC({value: true}))
-                    dispatch(setAppStatusAC({status:'succeeded'}))
-                } else {
-                    handleServerError(res.data, dispatch)
-                }
-            })
-            .catch((err) => {
-                dispatch(setAppErrorAC(err.message))
-                dispatch(setAppStatusAC({status:'failed'}))
-            })
-    }
 
-export const logoutTC = (): ThunkType => (dispatch) => {
-    dispatch(setAppStatusAC({status:'loading'}))
-    authApi.logout()
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setIsLoggedInAC({value: false}))
-                dispatch(setAppStatusAC({status:'succeeded'}))
-            } else {
-                handleServerError(res.data, dispatch)
-            }
-        })
-        .catch((err) => {
-            dispatch(setAppErrorAC(err.message))
-            dispatch(setAppStatusAC({status:'failed'}))
-        })
-}
-
-
-
-export type SetIsLoggedInACType = ReturnType<typeof setIsLoggedInAC>
-type ActionsType =
-    | SetIsLoggedInACType
-    | SetAppStatusACType
-    | SetAppErrorACType;
 

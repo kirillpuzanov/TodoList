@@ -19,12 +19,16 @@ import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {Route, Redirect, Switch} from 'react-router-dom';
 import {Login} from '../features/login/Login';
 import {logoutTC} from '../state/authReducer';
+import {selectIsInitialized, selectStatus} from './selectorsApp';
 
 
-function AppWithRedux() {
-    const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
-    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+
+const selectIsLoggedIn = (state:AppRootStateType)=> state.auth.isLoggedIn;
+
+function App() {
+    const status = useSelector(selectStatus)
+    const isInitialized = useSelector(selectIsInitialized)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -33,7 +37,7 @@ function AppWithRedux() {
 
     const logoutHandler = useCallback(() => {
         dispatch(logoutTC())
-    },[])
+    }, [])
 
     if (!isInitialized) {
         return <div
@@ -41,7 +45,7 @@ function AppWithRedux() {
             <CircularProgress/>
         </div>
     }
-    
+
     return (
         <div className="App">
             <ErrorSnackbar/>
@@ -69,6 +73,6 @@ function AppWithRedux() {
     );
 }
 
-export default AppWithRedux;
+export default App;
 
 
